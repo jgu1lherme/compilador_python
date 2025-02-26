@@ -4,8 +4,8 @@ import tkinter as tk
 from tkinter import filedialog
 
 
-def select_file(entry):
-    filename = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
+def select_file(entry, filetypes):
+    filename = filedialog.askopenfilename(filetypes=filetypes)
     entry.delete(0, tk.END)
     entry.insert(0, filename)
 
@@ -65,23 +65,27 @@ def create_gui():
 
     root = tk.Tk()
     root.title("Gerador PyInstaller")
-    root.geometry("750x550")
+    root.geometry("700x480")
     root.configure(bg="#f0f0f0")
 
     def add_spacing(frame):
         for widget in frame.winfo_children():
             widget.grid_configure(padx=5, pady=5)
 
+    # Seção: Arquivo principal
     frame_main = tk.Frame(root, bg="#f0f0f0")
     frame_main.pack(pady=10)
     tk.Label(frame_main, text="Arquivo Principal:", bg="#f0f0f0").grid(row=0, column=0)
     main_entry = tk.Entry(frame_main, width=50)
     main_entry.grid(row=0, column=1)
     tk.Button(
-        frame_main, text="Selecionar", command=lambda: select_file(main_entry)
+        frame_main,
+        text="Selecionar",
+        command=lambda: select_file(main_entry, [("Python Files", "*.py")]),
     ).grid(row=0, column=2)
     add_spacing(frame_main)
 
+    # Seção: Arquivos/Pastas adicionais
     frame_assets = tk.Frame(root, bg="#f0f0f0")
     frame_assets.pack(pady=10)
     tk.Label(frame_assets, text="Arquivos/Pastas Adicionais:", bg="#f0f0f0").grid(
@@ -101,16 +105,20 @@ def create_gui():
     ).grid(row=0, column=3)
     add_spacing(frame_assets)
 
+    # Seção: Ícone do executável
     frame_icon = tk.Frame(root, bg="#f0f0f0")
     frame_icon.pack(pady=10)
     tk.Label(frame_icon, text="Ícone (.ico):", bg="#f0f0f0").grid(row=0, column=0)
     icon_entry = tk.Entry(frame_icon, width=50)
     icon_entry.grid(row=0, column=1)
     tk.Button(
-        frame_icon, text="Selecionar", command=lambda: select_file(icon_entry)
+        frame_icon,
+        text="Selecionar",
+        command=lambda: select_file(icon_entry, [("Icon Files", "*.ico")]),
     ).grid(row=0, column=2)
     add_spacing(frame_icon)
 
+    # Seção: Opções de empacotamento
     options_frame = tk.Frame(root, bg="#f0f0f0")
     options_frame.pack(pady=10)
 
@@ -150,16 +158,20 @@ def create_gui():
         bg="#f0f0f0",
     ).grid(row=1, column=2)
 
+    # Opção: Executar após gerar
     execute_var = tk.BooleanVar()
     tk.Checkbutton(
         root, text="Executar comando após gerar", variable=execute_var, bg="#f0f0f0"
     ).pack(pady=10)
 
-    tk.Button(root, text="Gerar Comando", command=generate_command).pack(pady=5)
-
-    copy_button = tk.Button(root, text="Copiar Comando")
+    # Botões principais
+    tk.Button(root, text="Gerar Comando", command=generate_command, width=20).pack(
+        pady=5
+    )
+    copy_button = tk.Button(root, text="Copiar Comando (CTRL+V)", width=20)
     copy_button.pack(pady=5)
 
+    # Saída do comando gerado
     output_label = tk.Label(root, text="", wraplength=500, bg="#f0f0f0")
     output_label.pack(pady=10)
 
